@@ -1,5 +1,5 @@
 !SLIDE subsection
-# The past
+# In our past...
 
 * PO specified functionality as work packages on varying levels of technicality
 * PO asked DEV for feedback or not
@@ -8,7 +8,7 @@
 * implementation was as intended or not
 
 !SLIDE subsection
-# The present
+# In our present...
 
 * features
 * early collaboration on scenarios / examples
@@ -33,8 +33,8 @@ could technically be deployed to production.
 !SLIDE subsection
 # Our process (1/2)
 
-* PO thinks and plans in terms of features (business domain)
-* lower level details are deferred
+* PO thinks and plans in terms of features (business domain), deferring
+  lower level details
 * DEV and PO sit down together
   * writing scenarios (business domain)
   * creating stories from scenarios
@@ -56,12 +56,13 @@ could technically be deployed to production.
 * talk about the business domain
 * specific wrt actions
 * abstract wrt tasks
+* living documentation for PO and new team members
 
 !SLIDE code small
 
     Feature: Author publishes articles
 
-      In order to give users a coherent experience
+      In order to give readers a coherent experience
       As UX expert
       I want authors to adhere to my style guide
 
@@ -71,7 +72,7 @@ could technically be deployed to production.
         Then the article should appear on the site
 
       Scenario: Article doesn't conform to style guide
-        Given there is an improperly styled article
+        Given there is an article without headline
         When the author publishes the article
         Then he should see a style violation error
          And the article should not appear on the site
@@ -101,10 +102,35 @@ could technically be deployed to production.
 !SLIDE subsection
 # RSpec Features
 
+* `spec/features/`
+* talk about the application domain
+* capybara DSL for acceptance testing
+
+!SLIDE code small
+
+    @@@ Ruby
+    feature 'Session expiration' do
+
+      background do
+        login(user)
+      end
+
+      def session_should_be_valid
+        visit dashboard_path
+        user_should_be_logged_in
+      end
+
+      scenario 'a session is valid for 24 hours' do
+        Timecop.travel(24.hours.from_now - 1.second) do
+          session_should_be_valid
+        end
+      end
+    end
+
 !SLIDE subsection
 # Conclusion
 
-* features -> scenario -> story
+* feature -> scenario -> story
 * intensive collaboration DEV and PO
 * cucumber features for business logic
 * living documentation
